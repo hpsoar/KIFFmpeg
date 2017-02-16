@@ -1,13 +1,14 @@
 #!/bin/sh
 
 # directories
-SOURCE="ffmpeg-3.0"
+SOURCE="ffmpeg-3.1.7"
 FAT="FFmpeg-iOS"
 
 SCRATCH="scratch"
 # must be an absolute path
 THIN=`pwd`/"thin"
 
+MP3='mp3'
 # absolute path to x264 library
 #X264=`pwd`/fat-x264
 
@@ -15,6 +16,11 @@ THIN=`pwd`/"thin"
 
 CONFIGURE_FLAGS="--enable-cross-compile --disable-debug --disable-programs \
                  --disable-doc --enable-pic"
+
+if [ "$MP3" ]
+then
+	CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-libmp3lame"
+fi
 
 if [ "$X264" ]
 then
@@ -107,6 +113,13 @@ then
 		CC="xcrun -sdk $XCRUN_SDK clang"
 		CXXFLAGS="$CFLAGS"
 		LDFLAGS="$CFLAGS"
+
+    if [ "$MP3" ]
+    then
+			CFLAGS="$CFLAGS -I/usr/local/include"
+			LDFLAGS="$LDFLAGS -L/usr/local/lib"
+    fi
+
 		if [ "$X264" ]
 		then
 			CFLAGS="$CFLAGS -I$X264/include"
@@ -117,6 +130,13 @@ then
 			CFLAGS="$CFLAGS -I$FDK_AAC/include"
 			LDFLAGS="$LDFLAGS -L$FDK_AAC/lib"
 		fi
+
+    echo $ARCH
+    echo $CC
+    echo $CONFIGURE_FLAGS
+    echo $CFLAGS
+    echo $LDFLAGS
+    echo $THIN
 
 		TMPDIR=${TMPDIR/%\/} $CWD/$SOURCE/configure \
 		    --target-os=darwin \

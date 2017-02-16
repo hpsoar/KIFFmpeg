@@ -53,6 +53,10 @@ You should link your app with
 * libbz2.dylib
 * libiconv.dylib
 
+## NOTE
+  `--enable-libmp3lame` to support mp3 codec
+  event if you installed libmp3lame, the configure file will fail on this requirement, safely comment out that line
+
 ## Influences
 
 * https://github.com/bbcallen/ijkplayer/blob/fc70895c64cbbd20f32f1d81d2d48609ed13f597/ios/tools/do-compile-ffmpeg.sh#L7
